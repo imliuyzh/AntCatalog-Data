@@ -6,7 +6,7 @@ from random import uniform
 from time import asctime, sleep
 
 TERM_DICT = {"FALL": "92", "WINTER": "03", "SPRING": "14"}
-SPREADSHEET_FILE = "2020-2021.xlsx"
+SPREADSHEET_FILE = "2013-2014.xlsx"
 
 def _get_data(request: urllib.request.Request, course_code: str) -> dict:
     info = {
@@ -67,32 +67,35 @@ def _update_spreadsheet(index: int, info: dict, sheet: openpyxl.worksheet.worksh
     sheet["P" + str(index)].value = "T"
 
 def clean_data() -> None:
-    file = openpyxl.load_workbook("../temp/" + SPREADSHEET_FILE, data_only=True)
-    for sheetname in file.sheetnames:
-        sheet = file[sheetname]
-        start = _jump_to_first_not_processed_row(sheet)
-        
-        if start is not None:
-            while start <= sheet.max_row:
-                course_code = str(sheet["E" + str(start)].value) if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
-                print(f"[{asctime()}] Processing course #{course_code}.")
+    try:
+        file = openpyxl.load_workbook("../temp/" + SPREADSHEET_FILE, data_only=True)
+        for sheetname in file.sheetnames:
+            sheet = file[sheetname]
+            start = _jump_to_first_not_processed_row(sheet)
+            
+            if start is not None:
+                while start <= sheet.max_row:
+                    course_code = str(sheet["E" + str(start)].value) if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
+                    print(f"[{asctime()}] Processing course #{course_code}.")
 
-                request = _build_request({
-                    "quarter": sheetname.split()[1] + "-" + TERM_DICT[sheetname.split()[0].upper()],
-                    "course_code": course_code
-                })
-                info = _get_data(request, course_code)
+                    request = _build_request({
+                        "quarter": sheetname.split()[1] + "-" + TERM_DICT[sheetname.split()[0].upper()],
+                        "course_code": course_code
+                    })
+                    info = _get_data(request, course_code)
 
-                if info["success"] == True:
-                    _update_spreadsheet(start, info, sheet)
-                    file.save("../processed_data/_" + SPREADSHEET_FILE)
-                else:
-                    print(f"[{asctime()}] Failed to process course #{course_code}.")
-                start += 1
+                    if info["success"] == True:
+                        _update_spreadsheet(start, info, sheet)
+                        file.save("../processed_data/_" + SPREADSHEET_FILE)
+                    else:
+                        print(f"[{asctime()}] Failed to process course #{course_code}.")
+                    start += 1
 
-                pause_time = uniform(5, 9)
-                print(f"[{asctime()}] Halt the process for {pause_time:.2f} seconds to protect the WebSOC server.")
-                sleep(pause_time)
+                    pause_time = uniform(5, 9)
+                    print(f"[{asctime()}] Halt the process for {pause_time:.2f} seconds to protect the WebSOC server.")
+                    sleep(pause_time)
+    except KeyboardInterrupt:
+        print(f"[{asctime()}] Exiting the program...")
 
 if __name__ == "__main__":
     clean_data()
