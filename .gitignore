@@ -1,3 +1,4 @@
 temp/
 src/*
 !src/clean_data.py
+!src/requirements.txt
