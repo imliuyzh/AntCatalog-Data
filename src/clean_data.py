@@ -12,6 +12,7 @@ def _get_data(request: urllib.request.Request, course_code: str) -> dict:
     info = {
         "success": False,
         "dept_name": None,
+        "course_code": course_code,
         "course_number": None,
         "course_title": None,
         "instructors": []
@@ -24,13 +25,13 @@ def _get_data(request: urllib.request.Request, course_code: str) -> dict:
 
             if course_target is not None:
                 info["success"] = True
-                info["dept_name"] = course_target.parent.parent.parent["dept_name"].strip()
+                info["dept_name"] = course_target.parent.parent.parent["dept_code"].strip()
                 info["course_number"] = course_target.parent.parent["course_number"].strip()
                 info["course_title"] = course_target.parent.parent["course_title"].strip()
 
                 prof_list = course_target.find_next_sibling("sec_instructors").contents
                 for prof_element in prof_list:
-                    if prof_element not in ["\n", "STAFF"]:
+                    if prof_element != "\n" and prof_element.string.strip() != "STAFF":
                         info["instructors"].append(prof_element.string.strip())
     except urllib.error.HTTPError as error_object:
         print(f"[{asctime()}] Server returns error code ({error_object.code}).")
@@ -60,30 +61,31 @@ def _jump_to_first_not_processed_row(sheet: openpyxl.worksheet.worksheet.Workshe
 def _update_spreadsheet(index: int, info: dict, sheet: openpyxl.worksheet.worksheet.Worksheet) -> None:
     sheet["C" + str(index)].value = info["dept_name"]
     sheet["D" + str(index)].value = info["course_number"]
+    sheet["E" + str(index)].value = info["course_code"]
     sheet["F" + str(index)].value = info["course_title"]
     sheet["G" + str(index)].value = "; ".join(info["instructors"])
     sheet["P" + str(index)].value = "T"
 
 def clean_data() -> None:
-    file = openpyxl.load_workbook("processed-data/" + SPREADSHEET_FILE, data_only=True)
+    file = openpyxl.load_workbook("../temp/" + SPREADSHEET_FILE, data_only=True)
     for sheetname in file.sheetnames:
         sheet = file[sheetname]
         start = _jump_to_first_not_processed_row(sheet)
         
         if start is not None:
             while start <= sheet.max_row:
-                course_code = sheet["E" + str(start)].value if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
+                course_code = str(sheet["E" + str(start)].value) if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
                 print(f"[{asctime()}] Processing course #{course_code}.")
 
                 request = _build_request({
-                    "quarter": QUARTER.split()[1] + "-" + TERM_DICT[sheet["B2"].value.upper()],
+                    "quarter": sheetname.split()[1] + "-" + TERM_DICT[sheetname.split()[0].upper()],
                     "course_code": course_code
                 })
                 info = _get_data(request, course_code)
 
                 if info["success"] == True:
                     _update_spreadsheet(start, info, sheet)
-                    file.save("processed-data/_" + SPREADSHEET_FILE)
+                    file.save("../processed_data/_" + SPREADSHEET_FILE)
                 else:
                     print(f"[{asctime()}] Failed to process course #{course_code}.")
                 start += 1
