@@ -4,7 +4,7 @@
 + The span of data is from Fall 2013 to Spring 2021
 
 ## Getting Started
-### Structure
+### Project Structure
 + `original_data`
   + Spreadsheets from PRO (Public Records Office) in UC Irvine
 + `processed_data`
@@ -21,8 +21,22 @@
   + lxml
 + SQLite
 
-### Steps
+#### Steps
+1. `cd` into `src` and follow https://www.ics.uci.edu/~thornton/ics32/Notes/ThirdPartyLibraries/ to set up a virtual environment
+2. Activate the virtual environment
+   + Linux
+     1. `cd Scripts`
+     2. `source activate`
+   + Windows
+     1. `cd Scripts`
+     2. `activate`
+3. `pip -r requirements.txt`
 
+##### `clean_data.py`
+Run the parsing script (`python clean_data.py` or `python3 clean_data.py`) if you want
+
+##### `create_db.py`
+Run the database script (`python create_db.py` or `python3 create_db.py`) if you want
 
 ## Acknowledgments
 This project is made possible by UC Irvine's Public Records Office. But the inspiration has its root from the ZotCurve project.
