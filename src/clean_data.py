@@ -5,7 +5,7 @@ from html import unescape
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILE = "2017-2018.xlsx" # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILE = "2016-2017.xlsx" # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {"FALL": "92", "WINTER": "03", "SPRING": "14"}
 
 def _get_data(request: urllib.request.Request, course_code: str) -> dict:
@@ -101,15 +101,15 @@ def clean_data() -> None:
                             _update_spreadsheet(start, info, sheet)
                             file.save("../processed_data/_" + SPREADSHEET_FILE)
                         else:
-                            print(f"[{asctime()}] Failed to process course #{course_code}: " + info["error_message"])
-                            error_log.write(f"[{asctime()}] Failed to process course #{course_code}: {info["error_message"]}\n")
+                            print(f"[{asctime()}] Failed to process course #{course_code} ({sheetname}): " + info["error_message"])
+                            error_log.write(f"[{asctime()}] Failed to process course #{course_code} ({sheetname}): {info['error_message']}\n")
                         start += 1
 
                         pause_time = uniform(5, 9)
                         print(f"[{asctime()}] Halt the process for {pause_time:.2f} seconds to protect the WebSOC server.")
                         sleep(pause_time)
     except KeyboardInterrupt:
-        print(f"[{asctime()}] Exiting the program...")]
+        print(f"[{asctime()}] Exiting the program...")
 
 if __name__ == "__main__":
     clean_data()
