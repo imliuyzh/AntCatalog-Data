@@ -78,7 +78,7 @@ def _update_spreadsheet(row: int, info: dict, sheet: openpyxl.worksheet.workshee
     sheet["P" + str(row)].value = "T"
 
 def clean_data() -> None:
-    '''Start to parse the data from WebSOC.'''
+    '''Begin to send the request by one course code at a time and parse the data from WebSOC.'''
     try:
         file = openpyxl.load_workbook("../temp/" + SPREADSHEET_FILE, data_only=True)
         with open("log.txt", "w") as error_log:
