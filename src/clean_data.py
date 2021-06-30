@@ -5,7 +5,7 @@ from html import unescape
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILE = "2016-2017.xlsx" # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILE = "2015-2016.xlsx" # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {"FALL": "92", "WINTER": "03", "SPRING": "14"}
 
 def _get_data(request: urllib.request.Request, course_code: str) -> dict:
