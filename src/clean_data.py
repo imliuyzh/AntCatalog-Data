@@ -5,7 +5,7 @@ from html import unescape
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILE = "2015-2016.xlsx" # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILE = "2018-2019.xlsx" # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {"FALL": "92", "WINTER": "03", "SPRING": "14"}
 
 def _get_data(request: urllib.request.Request, course_code: str) -> dict:
@@ -89,7 +89,7 @@ def clean_data() -> None:
                 if start is not None:
                     while start <= sheet.max_row:
                         course_code = str(sheet["E" + str(start)].value) if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
-                        print(f"[{asctime()}] Processing course #{course_code}.")
+                        print(f"[{asctime()}] Processing course #{course_code} ({sheetname}).")
 
                         request = _build_request({
                             "quarter": sheetname.split()[1] + "-" + TERM_DICT[sheetname.split()[0].upper()],
