@@ -4,6 +4,7 @@ from pathlib import Path
 from time import asctime
 
 def create_index() -> None:
+    '''Index several fields on the Course and Instructor table.'''
     connection = sqlite3.connect("../data.db")
     try:
         print(f"[{asctime()}] Begin creating index")
@@ -26,6 +27,7 @@ def create_index() -> None:
             connection.close()
 
 def load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str, int, str, str, str, int, int, int, int, int, int, int, float)], [(str, int, str)]):
+    '''Return data in an academic year.'''
     all_courses, all_instructors = [], []
     for quarter in workbook.sheetnames:
         print(f"[{asctime()}] Processing data from {quarter}")
@@ -54,6 +56,7 @@ def load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str,
     return all_courses, all_instructors
 
 def insert_data() -> None:
+    '''Loop through the spreadsheets to parse and store all the course statistics into data.db.'''
     folder = Path(r"../processed_data")
     connection = sqlite3.connect("../data.db")
     
@@ -72,6 +75,7 @@ def insert_data() -> None:
             connection.close()
 
 def create_table() -> None:
+    '''Create a file named data.db and create two SQL tables.'''
     connection = sqlite3.connect("../data.db")
     try:
         print(f"[{asctime()}] Begin creating table")
