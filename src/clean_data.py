@@ -97,6 +97,9 @@ def clean_data() -> None:
                         })
                         info = _get_data(request, course_code)
 
+                        if sheet["O" + str(start)].value is None:
+                            sheet["O" + str(start)].value = 0
+
                         if info["success"] == True:
                             _update_spreadsheet(start, info, sheet)
                             file.save("../processed_data/_" + SPREADSHEET_FILE)
