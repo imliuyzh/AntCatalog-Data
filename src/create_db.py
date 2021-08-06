@@ -3,7 +3,7 @@ import openpyxl
 from pathlib import Path
 from time import asctime
 
-def create_index() -> None:
+def _create_index() -> None:
     '''Index several fields on the Course and Instructor table.'''
     connection = sqlite3.connect("../data.db")
     try:
@@ -26,7 +26,7 @@ def create_index() -> None:
         if connection is not None:
             connection.close()
 
-def load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str, int, str, str, str, int, int, int, int, int, int, int, float)], [(str, int, str)]):
+def _load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str, int, str, str, str, int, int, int, int, int, int, int, float)], [(str, int, str)]):
     '''Return data in an academic year.'''
     all_courses, all_instructors = [], []
     for quarter in workbook.sheetnames:
@@ -55,7 +55,7 @@ def load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str,
         print(f"[{asctime()}] Finished processing data from {quarter}")
     return all_courses, all_instructors
 
-def insert_data() -> None:
+def _insert_data() -> None:
     '''Loop through the spreadsheets to parse and store all the course statistics into data.db.'''
     folder = Path(r"../processed_data")
     connection = sqlite3.connect("../data.db")
@@ -63,7 +63,7 @@ def insert_data() -> None:
     try:
         for spreadsheet_path in folder.iterdir():
             print(f"[{asctime()}] Working with the file {spreadsheet_path}")
-            courses, instructors = load_data_per_year(openpyxl.load_workbook(str(spreadsheet_path), data_only=True))
+            courses, instructors = _load_data_per_year(openpyxl.load_workbook(str(spreadsheet_path), data_only=True))
             connection.executemany("INSERT INTO Course VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", courses)
             connection.executemany("INSERT INTO Instructor VALUES (?, ?, ?);", instructors)
             connection.commit()
@@ -74,7 +74,7 @@ def insert_data() -> None:
         if connection is not None:
             connection.close()
 
-def create_table() -> None:
+def _create_table() -> None:
     '''Create a file named data.db and create two SQL tables.'''
     connection = sqlite3.connect("../data.db")
     try:
@@ -118,6 +118,6 @@ def create_table() -> None:
             connection.close()
 
 if __name__ == "__main__":
-    create_table()
-    insert_data()
-    create_index()
+    _create_table()
+    _insert_data()
+    _create_index()
