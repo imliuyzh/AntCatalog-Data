@@ -10,9 +10,8 @@ def _create_index() -> None:
         print(f"[{asctime()}] Begin creating index")
         connection.executescript(
             """
-            CREATE INDEX TermIndex ON Course (term);
             CREATE INDEX CourseCodeIndex ON Course (course_code);
-            CREATE INDEX DepartmentIndex ON Course (department);
+            CREATE INDEX TermDepartmentCourseNumberIndex ON Course (term, department, course_number);
             CREATE INDEX DepartmentCourseNumberIndex ON Course (department, course_number);
             CREATE INDEX InstructorNameIndex ON Instructor (name);
             """
