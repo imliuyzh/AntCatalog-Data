@@ -77,7 +77,7 @@ def _update_spreadsheet(row: int, info: dict, sheet: openpyxl.worksheet.workshee
     sheet["G" + str(row)].value = "; ".join(info["instructors"])
     sheet["P" + str(row)].value = "T"
 
-def clean_data() -> None:
+def _clean_data() -> None:
     '''Begin to send the request by one course code at a time and parse the data from WebSOC.'''
     try:
         file = openpyxl.load_workbook("../temp/" + SPREADSHEET_FILE, data_only=True)
@@ -115,4 +115,4 @@ def clean_data() -> None:
         print(f"[{asctime()}] Exiting the program...")
 
 if __name__ == "__main__":
-    clean_data()
+    _clean_data()
