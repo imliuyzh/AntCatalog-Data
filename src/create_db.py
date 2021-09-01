@@ -48,9 +48,9 @@ def _load_data_per_year(workbook: openpyxl.workbook.workbook.Workbook) -> ([(str
             average_gpa = float(sheet["O" + str(row)].value) if sheet["O" + str(row)].value is not None else 0
             instructors = sheet["G" + str(row)].value.split("; ")
             
-            all_courses.append((quarter, course_code, department, course_number, course_title, grade_a_count, grade_b_count, grade_c_count, grade_d_count, grade_f_count, grade_p_count, grade_np_count, average_gpa))
+            all_courses.append((quarter, course_code, department.upper(), course_number.upper(), course_title.upper(), grade_a_count, grade_b_count, grade_c_count, grade_d_count, grade_f_count, grade_p_count, grade_np_count, average_gpa))
             for instructor in instructors:
-                all_instructors.append((quarter, course_code, instructor))
+                all_instructors.append((quarter, course_code, instructor.upper()))
 
         print(f"[{asctime()}] Finished processing data from {quarter}")
     return all_courses, all_instructors
