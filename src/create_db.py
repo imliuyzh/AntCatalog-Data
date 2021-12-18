@@ -4,10 +4,13 @@ from pathlib import Path
 from time import asctime
 
 class DBCreator:
+    '''A class to facilitate the database creation process.'''
     def __init__(self):
+        '''Constructor for the DBCreator class. self._count is used to set the ID for each class.'''
         self._count = 0
 
     def run(self) -> None:
+        '''Create the schemas, import the data from spreadsheets, and finalize the indexes.'''
         self._create_table()
         self._insert_data()
         self._create_index()
