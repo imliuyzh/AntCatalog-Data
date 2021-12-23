@@ -11,7 +11,7 @@ class DBCreator:
         self._count = 0
 
     def run(self) -> None:
-        '''Create the schemas, import the data from spreadsheets, and finalize the indexes.'''
+        '''Create the schemas, import the data from spreadsheets, create a view for every instructor in a course, and finalize the indexes.'''
         self._create_table()
         self._insert_data()
         self._create_view()
@@ -110,7 +110,7 @@ class DBCreator:
                 connection.close()
                 
     def _create_view(self) -> None:
-        '''Create a view storing a JSON list for each course.'''
+        '''Create a view storing a string for every instructor, separated by /, of all courses.'''
         connection = sqlite3.connect("../data.db")
         try:
             print(f"[{asctime()}] Begin creating a view")
