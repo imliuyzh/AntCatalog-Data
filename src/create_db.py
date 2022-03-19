@@ -26,7 +26,8 @@ class DBCreator:
                 """
                 CREATE TABLE Course (
                     course_id INTEGER,
-                    term TEXT NOT NULL,
+                    year INTEGER NOT NULL,
+                    quarter TEXT NOT NULL,
                     course_code INTEGER NOT NULL,
                     department TEXT NOT NULL,
                     course_number TEXT NOT NULL,
@@ -62,11 +63,12 @@ class DBCreator:
     def _load_data_per_year(self, workbook: openpyxl.workbook.workbook.Workbook) -> ([(int, str, int, str, str, str, int, int, int, int, int, int, int, float)], [(str, int, str)]):
         '''Return data in an academic year.'''
         all_courses, all_instructors = [], []
-        for quarter in workbook.sheetnames:
-            print(f"[{asctime()}] Processing data from {quarter}")
-            sheet = workbook[quarter]
+        for term in workbook.sheetnames:
+            print(f"[{asctime()}] Processing data from {term}")
+            sheet = workbook[term]
             
             for row in range(2, sheet.max_row + 1):
+                quarter, year = str(term.split()[0]), int(term.split()[1])
                 department = str(sheet["C" + str(row)].value)
                 course_number = str(sheet["D" + str(row)].value)
                 course_code = int(sheet["E" + str(row)].value)
@@ -81,13 +83,13 @@ class DBCreator:
                 average_gpa = float(sheet["O" + str(row)].value) if sheet["O" + str(row)].value is not None else 0
                 instructors = sheet["G" + str(row)].value.split("; ")
                 
-                all_courses.append((self._count, quarter, course_code, department.upper(), course_number.upper(), course_title.upper(), grade_a_count, grade_b_count, grade_c_count, grade_d_count, grade_f_count, grade_p_count, grade_np_count, average_gpa))
+                all_courses.append((self._count, year, quarter, course_code, department.upper(), course_number.upper(), course_title.upper(), grade_a_count, grade_b_count, grade_c_count, grade_d_count, grade_f_count, grade_p_count, grade_np_count, average_gpa))
                 for instructor in instructors:
                     all_instructors.append((self._count, instructor.upper()))
                 
                 self._count += 1
 
-            print(f"[{asctime()}] Finished processing data from {quarter}")
+            print(f"[{asctime()}] Finished processing data from {term}")
         return all_courses, all_instructors
 
     def _insert_data(self) -> None:
@@ -99,7 +101,7 @@ class DBCreator:
             for spreadsheet_path in folder.iterdir():
                 print(f"[{asctime()}] Working with the file {spreadsheet_path}")
                 courses, instructors = self._load_data_per_year(openpyxl.load_workbook(str(spreadsheet_path), data_only=True))
-                connection.executemany("INSERT INTO Course VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", courses)
+                connection.executemany("INSERT INTO Course VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", courses)
                 connection.executemany("INSERT INTO Instructor VALUES (?, ?);", instructors)
                 connection.commit()
         except sqlite3.Error as error:
@@ -140,8 +142,26 @@ class DBCreator:
             print(f"[{asctime()}] Begin creating index")
             connection.executescript(
                 """
-                CREATE INDEX CourseCodeTermIndex ON Course (course_code, term);
-                CREATE INDEX CourseNumberDepartmentTermIndex ON Course (course_number, department, term);
+                CREATE INDEX CourseCodeIndex ON Course (course_code);
+                CREATE INDEX CourseCodeCourseNumberIndex ON Course (course_code, course_number);
+                CREATE INDEX CourseCodeCourseNumberDepartmentIndex ON Course (course_code, course_number, department);
+                CREATE INDEX CourseCodeCourseNumberDepartmentQuarterIndex ON Course (course_code, course_number, department, quarter);
+                CREATE INDEX CourseCodeCourseNumberDepartmentQuarterYearndex ON Course (course_code, course_number, department, quarter, year);
+
+                CREATE INDEX CourseNumberIndex ON Course (course_number);
+                CREATE INDEX CourseNumberDepartmentIndex ON Course (course_number, department);
+                CREATE INDEX CourseNumberDepartmentQuarterIndex ON Course (course_number, department, quarter);
+                CREATE INDEX CourseNumberDepartmentQuarterYearndex ON Course (course_number, department, quarter, year);
+
+                CREATE INDEX DepartmentIndex ON Course (department);
+                CREATE INDEX DepartmentQuarterIndex ON Course (department, quarter);
+                CREATE INDEX DepartmentQuarterYearndex ON Course (department, quarter, year);
+
+                CREATE INDEX QuarterIndex ON Course (quarter);
+                CREATE INDEX QuarterYearndex ON Course (quarter, year);
+
+                CREATE INDEX YearIndex ON Course (year);
+                
                 CREATE INDEX InstructorNameIndex ON Instructor (name);
                 """
             )

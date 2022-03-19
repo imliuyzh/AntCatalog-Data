@@ -1,5 +1,10 @@
+# Processing data file
 temp/
-src/*
-!src/clean_data.py
-!src/create_db.py
-!src/requirements.txt
+
+# Python virtual environment files (Linux)
+bin/
+include/
+lib/
+lib64
+share/
+pyvenv.cfg
