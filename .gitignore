@@ -1,10 +1,18 @@
 # Processing data file
 temp/
 
+# Python virtual environment files
+pyvenv.cfg
+
 # Python virtual environment files (Linux)
 bin/
 include/
 lib/
 lib64
 share/
-pyvenv.cfg
+
+# Python virtual environment files (Windows)
+Include/
+Lib/
+Scripts/
+
