@@ -25,27 +25,27 @@ class DBCreator:
             connection.executescript(
                 """
                 CREATE TABLE Course (
-                    course_id INTEGER,
-                    year INTEGER NOT NULL,
-                    quarter TEXT NOT NULL,
-                    course_code INTEGER NOT NULL,
-                    department TEXT NOT NULL,
-                    course_number TEXT NOT NULL,
-                    course_title TEXT NOT NULL,
-                    grade_a_count INTEGER NOT NULL,
-                    grade_b_count INTEGER NOT NULL,
-                    grade_c_count INTEGER NOT NULL,
-                    grade_d_count INTEGER NOT NULL,
-                    grade_f_count INTEGER NOT NULL,
-                    grade_p_count INTEGER NOT NULL,
-                    grade_np_count INTEGER NOT NULL,
-                    gpa_avg REAL NOT NULL,
+                    course_id INTEGER CHECK (typeof(course_id) = 'integer'),
+                    year INTEGER NOT NULL CHECK (typeof(year) = 'integer'),
+                    quarter TEXT NOT NULL CHECK (typeof(quarter) = 'text'),
+                    course_code INTEGER NOT NULL CHECK (typeof(course_code) = 'integer'),
+                    department TEXT NOT NULL CHECK (typeof(department) = 'text'),
+                    course_number TEXT NOT NULL CHECK (typeof(course_number) = 'text'),
+                    course_title TEXT NOT NULL CHECK (typeof(course_title) = 'text'),
+                    grade_a_count INTEGER NOT NULL CHECK (typeof(grade_a_count) = 'integer'),
+                    grade_b_count INTEGER NOT NULL CHECK (typeof(grade_b_count) = 'integer'),
+                    grade_c_count INTEGER NOT NULL CHECK (typeof(grade_c_count) = 'integer'),
+                    grade_d_count INTEGER NOT NULL CHECK (typeof(grade_d_count) = 'integer'),
+                    grade_f_count INTEGER NOT NULL CHECK (typeof(grade_f_count) = 'integer'),
+                    grade_p_count INTEGER NOT NULL CHECK (typeof(grade_p_count) = 'integer'),
+                    grade_np_count INTEGER NOT NULL CHECK (typeof(grade_np_count) = 'integer'),
+                    gpa_avg REAL NOT NULL CHECK (typeof(gpa_avg) = 'real'),
                     CONSTRAINT CoursePrimaryKey PRIMARY KEY (course_id)
                 );
 
                 CREATE TABLE Instructor (
-                    course_id INTEGER,
-                    name TEXT,
+                    course_id INTEGER CHECK (typeof(course_id) = 'integer'),
+                    name TEXT CHECK (typeof(name) = 'text'),
                     CONSTRAINT InstructorPrimaryKey PRIMARY KEY (course_id, name),
                     CONSTRAINT InstructorCourseIdForeignKey FOREIGN KEY (course_id) REFERENCES Course(course_id) ON DELETE CASCADE
                 );
@@ -142,22 +142,22 @@ class DBCreator:
             print(f"[{asctime()}] Begin creating index")
             connection.executescript(
                 """
-                CREATE INDEX CourseCodeIndex ON Course (course_code);
-                CREATE INDEX CourseCodeCourseNumberIndex ON Course (course_code, course_number);
-                CREATE INDEX CourseCodeCourseNumberDepartmentIndex ON Course (course_code, course_number, department);
-                CREATE INDEX CourseCodeCourseNumberDepartmentQuarterIndex ON Course (course_code, course_number, department, quarter);
                 CREATE INDEX CourseCodeCourseNumberDepartmentQuarterYearndex ON Course (course_code, course_number, department, quarter, year);
+                CREATE INDEX CourseCodeCourseNumberQuarterYearndex ON Course (course_code, course_number, quarter, year);
+                CREATE INDEX CourseCodeCourseNumberYearndex ON Course (course_code, course_number, year);
+                CREATE INDEX CourseCodeDepartmentQuarterYearndex ON Course (course_code, department, quarter, year);
+                CREATE INDEX CourseCodeDepartmentYearndex ON Course (course_code, department, year);
+                CREATE INDEX CourseCodeQuarterYearndex ON Course (course_code, quarter, year);
+                CREATE INDEX CourseCodeYearndex ON Course (course_code, year);
 
-                CREATE INDEX CourseNumberIndex ON Course (course_number);
-                CREATE INDEX CourseNumberDepartmentIndex ON Course (course_number, department);
-                CREATE INDEX CourseNumberDepartmentQuarterIndex ON Course (course_number, department, quarter);
                 CREATE INDEX CourseNumberDepartmentQuarterYearndex ON Course (course_number, department, quarter, year);
+                CREATE INDEX CourseNumberDepartmentYearndex ON Course (course_number, department, year);
+                CREATE INDEX CourseNumberQuarterYearIndex ON Course (course_number, quarter, year);
+                CREATE INDEX CourseNumberYearIndex ON Course (course_number, year);
 
-                CREATE INDEX DepartmentIndex ON Course (department);
-                CREATE INDEX DepartmentQuarterIndex ON Course (department, quarter);
                 CREATE INDEX DepartmentQuarterYearndex ON Course (department, quarter, year);
+                CREATE INDEX DepartmentYearIndex ON Course (department, year);
 
-                CREATE INDEX QuarterIndex ON Course (quarter);
                 CREATE INDEX QuarterYearndex ON Course (quarter, year);
 
                 CREATE INDEX YearIndex ON Course (year);
