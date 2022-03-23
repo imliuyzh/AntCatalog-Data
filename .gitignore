@@ -1,7 +1,7 @@
-# Processing data file
+# Processing data folder
 temp/
 
-# Python virtual environment files
+# Python virtual environment common files
 pyvenv.cfg
 
 # Python virtual environment files (Linux)
