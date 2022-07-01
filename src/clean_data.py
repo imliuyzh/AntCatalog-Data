@@ -26,7 +26,7 @@ def _get_data(request: urllib.request.Request, course_code: str) -> dict:
 
     try:
         with urllib.request.urlopen(request) as response:
-            content = BeautifulSoup(unescape(response.read().decode()), "lxml")
+            content = BeautifulSoup(unescape(response.read().decode()), "lxml-xml")
             course_target = content.find("course_code", string=course_code)
 
             if course_target is not None:
