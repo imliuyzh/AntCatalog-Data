@@ -2,7 +2,6 @@ import logging
 import openpyxl
 import urllib.error, urllib.request
 from bs4 import BeautifulSoup
-from html import unescape
 from random import uniform
 from time import asctime, sleep
 
@@ -33,15 +32,15 @@ def _get_data(requests: [urllib.request.Request], course_code: str) -> dict:
     try:
         for request in requests:
             with urllib.request.urlopen(request) as response:
-                content = BeautifulSoup(unescape(response.read().decode()), "lxml-xml")
+                content = BeautifulSoup(response.read().decode(), features="xml")
                 course_target = content.find("course_code", string=course_code)
 
                 if course_target is not None:
                     if info["success"] == False:
                         info["success"] = True
-                        info["dept_name"] = course_target.parent.parent.parent["dept_code"].strip()
-                        info["course_number"] = course_target.parent.parent["course_number"].strip()
-                        info["course_title"] = course_target.parent.parent["course_title"].strip()
+                        info["dept_name"] = course_target.parent.parent.parent.get("dept_code").strip()
+                        info["course_number"] = course_target.parent.parent.get("course_number").strip()
+                        info["course_title"] = course_target.parent.parent.get("course_title").strip()
 
                         prof_list = course_target.find_next_sibling("sec_instructors").contents
                         for prof_element in prof_list:
