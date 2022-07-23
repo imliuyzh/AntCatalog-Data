@@ -25,6 +25,7 @@
 5. Take the data in the `original_data` folder, separate them based on academic years, and put them into the `temp` folder 
    + Check out the `processed_data` folder to have an idea on how the spreadsheets in the `temp` folder will look like (or check below)
 6. Run the parsing script (`python clean_data.py` or `python3 clean_data.py`) if you want
+   + Remember to list the files you want to process in `SPREADSHEET_FILES`
    + The result will show up on the `processed_data` folder
      + Courses that cannot be processed will have "F" in the `Processed` column
        + The reason is in the generated `src/log.txt` file
