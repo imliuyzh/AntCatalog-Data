@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILES = ["2021-2022.xlsx"] # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILES = [] # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {
     "FALL": "92",
     "WINTER": "03",
@@ -58,6 +58,8 @@ def _get_data(requests: [urllib.request.Request], course_code: str) -> dict:
         info["error_message"] = f"Server returns error code ({error_object.code})."
     except urllib.error.URLError as error_object:
         info["error_message"] = error_object.reason
+    except TimeoutError as error_object:
+        info["error_message"] = error_object
 
     return info
 
@@ -155,6 +157,8 @@ def _clean_data() -> None:
                             sleep(pause_time)
         except KeyboardInterrupt:
             logging.info(f"[{asctime()}] Exiting the program...")
+        except Exception as exception:
+            logging.warning(f"[{asctime()}] Error encountered: {exception}")
 
 if __name__ == "__main__":
     _clean_data()
