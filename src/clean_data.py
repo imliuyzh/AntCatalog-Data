@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILES = ["2016-2017.xlsx"] # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILES = ["2021-2022.xlsx"] # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {
     "FALL": "92",
     "WINTER": "03",
@@ -115,9 +115,9 @@ def _clean_data() -> None:
     '''Begin to send the request by one course code at a time and parse the data from WebSOC.'''
     logging.basicConfig(level=logging.DEBUG)
     for spreadsheet_file in SPREADSHEET_FILES:
-        try:
-            file = openpyxl.load_workbook("../temp/" + spreadsheet_file, data_only=True)
-            with open("log.txt", "w") as error_log:
+        with open("log.txt", "w") as error_log:
+            try:
+                file = openpyxl.load_workbook("../temp/" + spreadsheet_file, data_only=True)
                 for sheetname in file.sheetnames:
                     sheet = file[sheetname]
                     start = _jump_to_first_not_processed_row(sheet)
@@ -155,10 +155,11 @@ def _clean_data() -> None:
                             pause_time = uniform(5, 9)
                             logging.info(f"[{asctime()}] Halt the process for {pause_time:.2f} seconds to protect the WebSOC server.")
                             sleep(pause_time)
-        except KeyboardInterrupt:
-            logging.info(f"[{asctime()}] Exiting the program...")
-        except Exception as exception:
-            logging.warning(f"[{asctime()}] Error encountered: {exception}")
+            except KeyboardInterrupt:
+                logging.info(f"[{asctime()}] Exiting the program...")
+            except Exception as exception:
+                logging.warning(f"[{asctime()}] Error encountered: {exception}")
+                error_log.write(f"[{asctime()}] Error encountered: {exception}")
 
 if __name__ == "__main__":
     _clean_data()
