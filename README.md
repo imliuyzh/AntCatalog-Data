@@ -1,7 +1,6 @@
 # AntCatalog-Data
 + AntCatalog only processes graduate classes
-+ Classes from some departments like Law are omitted from processing due to higher efforts needed to parse the data
-+ The span of data is from Summer 2013 to Fall 2022
+  + Classes from some departments like Law are omitted from processing due to higher efforts needed to parse the data
 
 ## Getting Started
 ### Built With
