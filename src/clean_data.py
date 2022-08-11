@@ -124,7 +124,7 @@ def _clean_data() -> None:
                     
                     if start is not None:
                         while start <= sheet.max_row:
-                            course_code = str(sheet["E" + str(start)].value) if len(str(sheet["E" + str(start)].value)) == 5 else "0" + str(sheet["E" + str(start)].value)
+                            course_code = str(sheet["E" + str(start)].value)
                             logging.info(f"[{asctime()}] Processing course #{course_code} ({sheetname}).")
 
                             info = None
