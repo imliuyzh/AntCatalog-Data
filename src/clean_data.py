@@ -115,7 +115,7 @@ def _clean_data() -> None:
     '''Begin to send the request by one course code at a time and parse the data from WebSOC.'''
     logging.basicConfig(level=logging.DEBUG)
     for spreadsheet_file in SPREADSHEET_FILES:
-        with open("log.txt", "w") as error_log:
+        with open("log.txt", "a") as error_log:
             try:
                 file = openpyxl.load_workbook("../temp/" + spreadsheet_file, data_only=True)
                 for sheetname in file.sheetnames:
