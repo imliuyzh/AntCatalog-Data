@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from random import uniform
 from time import asctime, sleep
 
-SPREADSHEET_FILES = ["2021-2022.xlsx"] # Change to the name of the file under the "temp" folder you want to parse
+SPREADSHEET_FILES = ["2022-2023.xlsx"] # Change to the name of the file under the "temp" folder you want to parse
 TERM_DICT = {
     "FALL": "92",
     "WINTER": "03",
