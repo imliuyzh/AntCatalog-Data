@@ -4,7 +4,7 @@
 
 ## Getting Started
 ### Built With
-+ Python
++ Python v3.10
   + openpyxl
   + beautifulsoup4
   + lxml

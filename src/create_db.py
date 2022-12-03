@@ -139,7 +139,7 @@ class DBCreator:
         '''Index several fields on the Course and Instructor table.'''
         connection = sqlite3.connect("../data.db")
         try:
-            print(f"[{asctime()}] Begin creating index")
+            print(f"[{asctime()}] Begin creating indices")
             connection.executescript(
                 """
                 CREATE INDEX CourseCodeCourseNumberDepartmentQuarterYearndex ON Course (course_code, course_number, department, quarter, year);
@@ -165,7 +165,7 @@ class DBCreator:
                 CREATE INDEX InstructorNameIndex ON Instructor (name);
                 """
             )
-            print(f"[{asctime()}] Finished creating index")
+            print(f"[{asctime()}] Finished creating indices")
             connection.commit()
         except sqlite3.Error as error:
             print(f"[{asctime()}] Failed to create index: {error}")
