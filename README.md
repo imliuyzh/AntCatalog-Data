@@ -1,5 +1,5 @@
 # AntCatalog-Data
-AntCatalog only processes graduate classes from Summer 2013 to Fall 2022. Note that classes from certain departments like Law are omitted from processing due to higher efforts needed to parse the data.
+AntCatalog only includes graduate classes from Summer 2013 to Fall 2022. Note that classes from certain departments like Law are omitted due to efforts needed to parse the data.
 
 ## Getting Started
 ### Built With
