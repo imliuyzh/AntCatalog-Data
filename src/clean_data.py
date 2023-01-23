@@ -158,8 +158,8 @@ def _clean_data() -> None:
             except KeyboardInterrupt:
                 logging.info(f"[{asctime()}] Exiting the program...")
             except Exception as exception:
-                logging.warning(f"[{asctime()}] Error encountered: {exception}")
-                error_log.write(f"[{asctime()}] Error encountered: {exception}")
+                logging.exception(f"[{asctime()}] Error encountered: {exception}")
+                error_log.write(f"[{asctime()}] Error encountered: {type(exception).__name__} - {str(exception)}")
 
 if __name__ == "__main__":
     _clean_data()
