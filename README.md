@@ -1,5 +1,5 @@
 # AntCatalog-Data
-AntCatalog only includes graduate classes from Summer 2013 to Fall 2022. Note that classes from certain departments like Law are omitted due to efforts needed to parse the data.
+This repository is for processing graduate classes from Summer 2013 to Fall 2022 for AntCatalog. Note that classes from certain departments like Law are omitted due to efforts needed to parse the data.
 
 ## Getting Started
 ### Built With
