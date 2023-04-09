@@ -94,11 +94,11 @@ class DBCreator:
 
     def _insert_data(self) -> None:
         '''Loop through the spreadsheets to parse and store all the course statistics into data.db.'''
-        folder = Path(r"../processed_data")
+        files = Path(r"../processed_data").glob("*.xlsx")
         connection = sqlite3.connect("../data.db")
 
         try:
-            for spreadsheet_path in folder.iterdir():
+            for spreadsheet_path in files:
                 print(f"[{asctime()}] Working with the file {spreadsheet_path}")
                 courses, instructors = self._load_data_per_year(openpyxl.load_workbook(str(spreadsheet_path), data_only=True))
                 connection.executemany("INSERT INTO Course VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", courses)
